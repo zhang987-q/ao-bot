@@ -1,1 +1,1 @@
-# ao-test
+# Robots that strike automatically
