@@ -1,6 +1,6 @@
 -- Initializing global variables to store the latest game state and game host process.
 LatestGameState = LatestGameState or nil
-InAction = InAction or false -- Prevents the agent from taking multiple actions at once.
+InAction = false -- Prevents the agent from taking multiple actions at once.
 
 Logs = Logs or {}
 
@@ -62,7 +62,7 @@ function decideNextAction()
     ao.send({Target = Game, Action = "PlayerAttack", Player = ao.id, AttackEnergy = tostring(playerEnergy)})
   end
 
-  InAction = false -- InAction logic added
+  InAction = false
 end
 
 -- Handler to print game announcements and trigger game state updates.
@@ -76,7 +76,7 @@ Handlers.add(
       InAction = true -- InAction logic added
       ao.send({Target = Game, Action = "GetGameState"})
     elseif InAction then -- InAction logic added
-      print("Previous action still in progress. Skipping.")
+      print("[1] Previous action still in progress. Skipping.")
     end
     print(colors.green .. msg.Event .. ": " .. msg.Data .. colors.reset)
   end
@@ -92,7 +92,7 @@ Handlers.add(
       print(colors.gray .. "Getting game state..." .. colors.reset)
       ao.send({Target = Game, Action = "GetGameState"})
     else
-      print("Previous action still in progress. Skipping.")
+      print("[2] Previous action still in progress. Skipping.")
     end
   end
 )
@@ -152,10 +152,10 @@ Handlers.add(
         print(colors.red .. "Returning attack." .. colors.reset)
         ao.send({Target = Game, Action = "PlayerAttack", Player = ao.id, AttackEnergy = tostring(playerEnergy)})
       end
-      InAction = false -- InAction logic added
+      InAction = false
       ao.send({Target = ao.id, Action = "Tick"})
     else
-      print("Previous action still in progress. Skipping.")
+      print("[3] Previous action still in progress. Skipping.")
     end
   end
 )
